@@ -1,7 +1,6 @@
-// src/controllers/commentController.js
 import   {Comment, Blog}  from '../models/config.js';
 
-export const addComment = async (req, res) => {
+export const addComment = async (req, res,next) => {
   try {
     const { content } = req.body;
     const { blogId } = req.params;
@@ -10,32 +9,42 @@ export const addComment = async (req, res) => {
     const blog = await Blog.findByPk(blogId);
 
     if (!blog) {
-      return res.status(404).json({ error: 'Blog post not found' });
+      const error = new Error("Blog post not found");
+      error.statusCode = 404;
+      return next(error);
     }
 
     const comment = await Comment.create({ content, BlogId: blogId, UserId: userId });
 
-    res.json(comment);
+    res.status(201).json(comment);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to add a comment' });
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
   }
 };
 
-export const getCommentsByBlogId = async (req, res) => {
+export const getCommentsByBlogId = async (req, res,next) => {
   try {
     const { blogId } = req.params;
 
     const blog = await Blog.findByPk(blogId);
 
     if (!blog) {
-      return res.status(404).json({ error: 'Blog post not found' });
+      const error = new Error("Blog post not found");
+      error.statusCode = 404;
+      return next(error);
     }
 
     const comments = await Comment.findAll({ where: { BlogId: blogId } });
 
-    res.json(comments);
+    res.status(200).json(comments);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to retrieve comments' });
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
   }
 };
 

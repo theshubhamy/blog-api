@@ -27,9 +27,10 @@ const Blog = BlogModel(sequelize, Sequelize);
 const Comment = CommentModel(sequelize, Sequelize);
 
 User.hasMany(Blog);
+User.hasMany(Comment);
 Blog.belongsTo(User);
-
 Blog.hasMany(Comment);
+Comment.belongsTo(User);
 Comment.belongsTo(Blog);
 
 export {

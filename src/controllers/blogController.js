@@ -1,35 +1,49 @@
-import  {Blog}  from '../models/config.js';
+import { Blog } from "../models/config.js";
 
-export const createBlog = async (req, res) => {
+export const createBlog = async (req, res, next) => {
   try {
     const { title, content } = req.body;
     const { userId } = req;
 
-    const blog = await Blog.create({ title, content, UserId: userId });
-
-    res.json(blog);
+    const isExistingBlog = await Blog.findOne({ where: { title } });
+    if (!isExistingBlog) {
+      const blog = await Blog.create({ title, content, UserId: userId });
+      res.status(201).json(blog);
+    } else {
+      const error = new Error("Blog with the title already exist!");
+      error.statusCode = 404;
+      return next(error);
+    }
   } catch (error) {
-    res.status(500).json({ error: 'Failed to create a blog post' });
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
   }
 };
 
-export const getBlogById = async (req, res) => {
+export const getBlogById = async (req, res, next) => {
   try {
     const { blogId } = req.params;
 
     const blog = await Blog.findByPk(blogId);
 
     if (!blog) {
-      return res.status(404).json({ error: 'Blog post not found' });
+      const error = new Error("Blog post not found");
+      error.statusCode = 404;
+      return next(error);
     }
 
-    res.json(blog);
+    res.status(200).json(blog);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to retrieve the blog post' });
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
   }
 };
 
-export const updateBlog = async (req, res) => {
+export const updateBlog = async (req, res, next) => {
   try {
     const { blogId } = req.params;
     const { title, content } = req.body;
@@ -38,18 +52,23 @@ export const updateBlog = async (req, res) => {
     const blog = await Blog.findOne({ where: { id: blogId, UserId: userId } });
 
     if (!blog) {
-      return res.status(404).json({ error: 'Blog post not found' });
+      const error = new Error("Blog post not found");
+      error.statusCode = 404;
+      return next(error);
     }
 
     await blog.update({ title, content });
 
-    res.json(blog);
+    res.status(201).json(blog);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update the blog post' });
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
   }
 };
 
-export const deleteBlog = async (req, res) => {
+export const deleteBlog = async (req, res, next) => {
   try {
     const { blogId } = req.params;
     const { userId } = req;
@@ -57,24 +76,35 @@ export const deleteBlog = async (req, res) => {
     const blog = await Blog.findOne({ where: { id: blogId, UserId: userId } });
 
     if (!blog) {
-      return res.status(404).json({ error: 'Blog post not found' });
+      const error = new Error("Blog post not found");
+      error.statusCode = 404;
+      return next(error);
     }
 
     await blog.destroy();
 
-    res.json({ message: 'Blog post deleted successfully' });
+    res.status(200).json({ message: "Blog post deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to delete the blog post' });
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
   }
 };
 
-export const getAllBlogs = async (req, res) => {
+export const getAllBlogs = async (req, res, next) => {
   try {
     const blogs = await Blog.findAll();
-
+    if (!blogs) {
+      const error = new Error("Blog post not found");
+      error.statusCode = 404;
+      return next(error);
+    }
     res.json(blogs);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to retrieve blog posts' });
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
   }
 };
-
