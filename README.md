@@ -13,7 +13,7 @@ This is a RESTful API for managing a simple blog system. It allows users to crea
 
 - Node.js
 - Express.js
-- Mysql with Sequlize
+- MySQL with sequelize
 - bcrypt for password hashing
 - jsonwebtoken for user authentication
 - Jest for testing
@@ -21,7 +21,7 @@ This is a RESTful API for managing a simple blog system. It allows users to crea
 ## Prerequisites
 
 - Node.js installed on your machine
-- MySql installed and running
+- MySQL installed and running
 
 ## Getting Started
 
@@ -54,10 +54,10 @@ Make sure to replace `your-secret-key` with your own secret key for JWT token ge
 4. Start the server:
 
 ```bash
-npm start
+npm run dev
 ```
 
-The server will start running on `http://localhost:3000`.
+The server will start running on `http://localhost:5500`.
 
 ## API Endpoints
 
