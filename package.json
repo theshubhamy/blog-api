@@ -9,8 +9,8 @@
     "start": "node src/app.js",
     "dev": "nodemon src/app.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["Blog API"],
+  "author": "theshubhamy",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.0",
